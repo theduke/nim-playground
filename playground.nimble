@@ -10,5 +10,4 @@ website       = "https://github.com/theduke/nim-playground"
 bin           = "playground"
 
 [Deps]
-Requires: "nim >= 0.12.0"
-Requires: "jester"
+Requires: "nim >= 0.12.0, jester > 0.1"
