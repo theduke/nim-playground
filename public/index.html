@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>NIM Playground</title>
+	<link rel="stylesheet" type="text/css" href="/js/bootstrap-3.3.5-dist/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="/js/bootstrap-3.3.5-dist/css/bootstrap-theme.css" />
+	<link rel="stylesheet" type="text/css" href="/css/playground.css" />
+</head>
+
+<body>
+	<h1>Nim Playground</h1>
+
+	<div class="container" id="playground">
+		
+		<div class="row">
+			<div class="col-md-6 header-wrap">
+				<h3>Code</h3>
+			</div>
+
+			<div class="col-md-6 header-wrap">
+				<h3>Result</h3>
+				<div class="row">
+					<div class="col-sm-2" style="text-align: center;">
+						<h4>Status</h4>
+						<img src="/img/ajax-loader.gif" class="loader" />
+					</div>
+					<div class="col-sm-10">
+						<p class="alert alert-info" id="status-alert">Waiting for input...</p>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-6">
+				<pre id="editor"></pre>
+				
+				<div class="panel-footer">
+					<button class="btn btn-primary btn-lg runner">Execute</button>
+					<img src="/img/ajax-loader.gif" class="loader" />
+				</div>
+			</div>
+
+			<div class="col-md-6">
+				<div class="panel" id="status-panel">
+				<pre class="well" id="result"></pre>
+			</div>
+		</div>
+	</div>
+
+	
+
+	<script type="text/javascript" src="/js/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="/js/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+	<script src="/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="/js/playground.js"></script>
+</body>
+
+</html>
