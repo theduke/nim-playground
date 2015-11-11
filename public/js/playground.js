@@ -14,6 +14,8 @@
 			var editor = ace.edit("editor");
 	    	editor.setTheme("ace/theme/chrome");
 	    	editor.session.setMode("ace/mode/python");
+	    	editor.getSession().setUseSoftTabs(true);
+	    	editor.getSession().setTabSize(2);
 
 	    	this.editor = editor;
 

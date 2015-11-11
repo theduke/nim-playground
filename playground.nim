@@ -33,6 +33,7 @@ proc execute(body: string): string =
       echo("Execution of $1 succeded." % [filePath])
 
   output = output.replace("\n", "\\n")
+  output = output.replace("\"", "\\\"")
 
   var json = """{
     "status": "$1", 
