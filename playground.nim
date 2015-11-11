@@ -1,5 +1,10 @@
-import jester, asyncdispatch, htmlgen, strutils, strtabs, osproc, os, oids, times
+import jester, asyncdispatch, htmlgen, strutils, strtabs, osproc, os, oids, times, marshal
 
+type Result = object of RootObj
+  status: string
+  result: string
+  compileTime: float
+  executionTime: float
 
 proc execute(body: string): string =
   var status = "success"
@@ -18,13 +23,13 @@ proc execute(body: string): string =
   echo("Compiling file $1" % [filePath])
   var (rawOutput, errCode) = osproc.execCmdEx("nim c " & filePath & ".nim")
   compileTime = times.epochTime() - start
+  output = $rawOutput
   if errCode > 0:
     status = "compileError"
-    output = $rawOutput
     echo("Compilation error for $1: $2" % [filePath, output])
   else:
     (rawOutput, errCode) = osproc.execCmdEx(filePath)
-    output = $rawOutput
+    output = $rawOutput & "\n" & "#".repeat(60) & "\n###" & " Compiler output " & "#".repeat(40) & "\n" & "#".repeat(60) & "\n\n" & output
     executionTime = times.epochTime() - start - compileTime
     if errCode > 0:
       status = "executionError"
@@ -32,17 +37,9 @@ proc execute(body: string): string =
     else:
       echo("Execution of $1 succeded." % [filePath])
 
-  output = output.replace("\n", "\\n")
-  output = output.replace("\"", "\\\"")
+  var response = Result(status: status, result: output, compileTime: compileTime, executionTime: executionTime)
 
-  var json = """{
-    "status": "$1", 
-    "result": "$2",
-    "compileTime": $3,
-    "executionTime": $4
-  }""" % [status, output, $compileTime, $executionTime]
-
-  return json
+  return $$response
 
 routes:
   post "/api/execute":
