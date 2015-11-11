@@ -19,6 +19,12 @@
 
 	    	this.editor = editor;
 
+	    	// Restore last code, if found.
+	    	var code = localStorage.getItem("lastCode");
+	    	if (code) {
+	    		this.editor.setValue(code);
+	    	}
+
 	    	$(".runner").click(function(evt) {
 	    		that.execute();		
 	    	});
@@ -33,6 +39,9 @@
 
 			var code = this.editor.getValue().trim();
 			if (code !== "") {
+				// Save code to localstorage.
+				localStorage.setItem("lastCode", code);
+
 				$(".loader").css("display", "inline");
 				$(".runner").attr("disabled", "");
 				this.setStatus("Processing...", "warning");
