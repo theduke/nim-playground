@@ -21,7 +21,7 @@ proc execute(body: string): string =
   system.writeFile(filePath & ".nim", body)
   
   echo("Compiling file $1" % [filePath])
-  var (rawOutput, errCode) = osproc.execCmdEx("nim c " & filePath & ".nim")
+  var (rawOutput, errCode) = osproc.execCmdEx("nim c --threads:on " & filePath & ".nim")
   compileTime = times.epochTime() - start
   output = $rawOutput
   if errCode > 0:
@@ -29,7 +29,7 @@ proc execute(body: string): string =
     echo("Compilation error for $1: $2" % [filePath, output])
   else:
     (rawOutput, errCode) = osproc.execCmdEx(filePath)
-    output = $rawOutput & "\n" & "#".repeat(60) & "\n###" & " Compiler output " & "#".repeat(40) & "\n" & "#".repeat(60) & "\n\n" & output
+    output = $rawOutput & "\n\n\n\n" & "#".repeat(60) & "\n###" & " Compiler output " & "#".repeat(40) & "\n" & "#".repeat(60) & "\n\n" & output
     executionTime = times.epochTime() - start - compileTime
     if errCode > 0:
       status = "executionError"
