@@ -41,10 +41,14 @@ proc execute(body: string): string =
 
   return $$response
 
+settings:
+  staticDir = joinPath(getAppDir(), "public")
+
 routes:
   post "/api/execute":
     headers = newStringTable(modeCaseSensitive)
     headers["Content-Type"] = "application/json"
     resp(execute(request.body))
+
 
 runForever()
