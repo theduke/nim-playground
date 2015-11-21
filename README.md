@@ -1,6 +1,6 @@
 # nim-playground
 
-Interactive website that allows you to easily play with the [Nim language](http://nim-lang.org).
+Interactive server/website that gives you an editor allowing you to easily play with the [Nim language](http://nim-lang.org).
 
 You can execute Nim code right in your browser, and see the output, or compiler errors.
 The history of your executed code is saved in browser localStorage.
