@@ -27,6 +27,13 @@ playground
 * Enjoy.
 
 
+## Security notice
+
+The playground **is NOT** intended for public hosting / being available publicly, since any user could 
+wreak havoc on the running machine (delete files, etc).
+
+Only use it locally, behind a firewall.
+
 ## Additional information
 
 ### Versioning
