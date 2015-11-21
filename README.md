@@ -1,10 +1,16 @@
 # nim-playground
 
-A interactive website and server that allow you to easily play with and explore the Nim programming language.
+Interactive website that allows you to easily play with the [Nim language](http://nim-lang.org).
+
+You can execute Nim code right in your browser, and see the output, or compiler errors.
+The history of your executed code is saved in browser localStorage.
+
+You should run the playground yourself on your local computer.
+It only takes two commands to install and launch it.
 
 ## Get started
 
-* Install the playground with **nimble**:
+* Install the playground with [**nimble**](https://github.com/nim-lang/nimble):
 
 ```bash
 nimble install playground
