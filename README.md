@@ -23,6 +23,11 @@ playground
 
 ## Additional information
 
+### Versioning
+
+This project follows [SemVer](semver.org).
+
 ### License.
 
-This project is under the MIT license.
+This project is under the [MIT license](https://opensource.org/licenses/MIT).
+

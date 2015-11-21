@@ -22,12 +22,86 @@
 	    	// Restore last code, if found.
 	    	var code = localStorage.getItem("lastCode");
 	    	if (code) {
+	    		console.log("restoring code")
 	    		this.editor.setValue(code);
 	    	}
 
 	    	$(".runner").click(function(evt) {
 	    		that.execute();		
 	    	});
+
+	    	// Allow submit with ctrl-enter.
+	    	$("#editor").keydown(function(evt) {
+	    		if (evt.ctrlKey && evt.keyCode === 13) {
+	    			that.execute()
+	    		}
+	    	});
+
+	    	// Navigation callbacks.
+	    	$("#show-pg").click(function() {
+	    		that.showPlayground();
+	    	});
+	    	$("#show-history").click(function() {
+	    		that.showHistory();
+	    	});
+	    	$("body").on("click", ".history-edit", function() {
+	    		var index = parseInt($(this).attr("data-id"));
+	    		var item = JSON.parse(localStorage.getItem("pgHistory"))[index];
+	    		
+	    		that.editor.setValue(item.code);
+	    		$("#result").html(item.result);
+
+	    		that.showPlayground();
+	    	});
+
+	    	// Clear history.
+	    	$("#clear-history").click(function() {
+	    		localStorage.setItem("pgHistory", null);
+	    		that.showHistory();
+	    	});
+		},
+
+		showPlayground: function() {
+			$("#history").css("display", "none");
+			$("#playground").css("display", "block");
+			$("#main-nav li").removeClass("active");
+			$("#show-pg").parent().addClass("active");
+		},
+
+		showHistory: function() {
+			$("#playground").css("display", "none");
+			$("#history").css("display", "block");
+			$("#main-nav li").removeClass("active");
+			$("#show-history").parent().addClass("active");
+
+			var jsonHistory = localStorage.getItem("pgHistory");
+			var history = JSON.parse(jsonHistory);
+			history = history || [];
+
+			if (history.length < 1) {
+				$("#history-list").html('<li class="list-group-item">No entries yet.</li>');
+			} else {
+				var html = "";
+				for (var i = history.length - 1; i >= 0; i--) {
+					var item = history[i];
+					var h = '<li class="list-group-item"><div class="row">';
+					var date = new Date(item.time);
+
+					h += '<div class="col-xs-3">' + date.toISOString().replace("T", " ").substr(0, 19) + "</div>";
+
+					var btnClass = "label label-" + (item.status === "success" ? "success" : "danger");
+					var status = item.status === "success" ? "OK" : "Error";
+
+					h += '<div class="col-xs-3"><span class="' + btnClass + '">' + status + "</span>" + "</div>";
+
+					h += '<div class="col-xs-3"><button class="btn btn-md btn-primary history-edit" data-id="' + i + '">Edit</button></div>'; 
+
+					h += "</div></li>"
+
+					html += h;
+				}
+				$("#history-list").html(html);
+			}
 		},
 
 		execute: function() {
@@ -67,6 +141,21 @@
 						var msg = "Compilation succeded but execution failed";	
 						that.setStatus(msg, "danger");
 					}
+
+					var jsonHistory = localStorage.getItem("pgHistory");
+					var history = JSON.parse(jsonHistory);
+					history = history || [];
+					if (history.length > 300) {
+						history = history.slice(0, 300);
+					}
+					history.push({
+						code: code,
+						time: new Date().getTime(),
+						status: data.status,
+						result: data.result
+					});
+					localStorage.setItem("pgHistory", JSON.stringify(history));
+
 
 					$("#result").html(data.result);
 

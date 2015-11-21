@@ -1,3 +1,16 @@
+
+body {
+  margin-top: 60px;
+}
+
+#history {
+  display: none;
+}
+
+#history .label {
+  font-size: 1.2em;
+}
+
 .loader {
 	display: none;
 }
