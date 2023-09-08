@@ -1,4 +1,4 @@
-import jester, asyncdispatch, htmlgen, strutils, strtabs, osproc, os, oids, times, marshal
+import jester, asyncdispatch, htmlgen, strutils, strtabs, osproc, os, oids, times, marshal, json
 
 type Result = object of RootObj
   status: string
@@ -21,7 +21,7 @@ proc execute(body: string, appendCompilerOutput = true): string =
   system.writeFile(filePath & ".nim", body)
   
   echo("Compiling file $1" % [filePath])
-  var (rawOutput, errCode) = osproc.execCmdEx("nim c --threads:on " & filePath & ".nim")
+  var (rawOutput, errCode) = osproc.execCmdEx("nim c --threads:on --opt:none " & filePath & ".nim")
   compileTime = times.epochTime() - start
   output = $rawOutput
   if errCode > 0:
@@ -51,7 +51,11 @@ routes:
   post "/api/execute":
     let headers = newStringTable(modeCaseSensitive)
     headers["Content-Type"] = "application/json"
-    resp(execute(request.body))
+    let body = try: request.body.parseJson
+               except: newJNull()
+    let code = body["code"].getStr()
+    let compilerOutput = body["compilerOutput"].getBool()
+    resp(execute(code, appendCompilerOutput = compilerOutput))
 
 
 runForever()

@@ -13,7 +13,7 @@
 
 		setEditorDarkMode: function(dark = false) {
 			if (dark) {
-				this.editor.setTheme("ace/theme/chaos");
+				this.editor.setTheme("ace/theme/tomorrow_night");
 			} else {
 				this.editor.setTheme("ace/theme/chrome");
 			}
@@ -24,20 +24,28 @@
 
 			console.log("Initializing Ace editor.");
 			var editor = ace.edit("editor");
-	    	editor.getSession().setUseSoftTabs(true);
-	    	editor.getSession().setTabSize(2);
+			editor.getSession().setUseSoftTabs(true);
+			editor.getSession().setTabSize(2);
+			editor.setFontSize(14);
 
-	    	this.editor = editor;
+			this.editor = editor;
 			this.setEditorDarkMode(this.isDarkModeEnabled());
 
 			// Listen for theme changes.
 			document.addEventListener('bsThemeChanged', (e) => {
-				console.log("Theme changed to " + e.detail.theme);
 				this.setEditorDarkMode(e.detail.theme === 'dark');
+			});
+
+			// Listen for and save checkbox changes.
+			var compilerOutputCheckbox = document.getElementById("compiler-output");
+			compilerOutputCheckbox.addEventListener("change", function() {
+				localStorage.setItem("compilerOutput", this.checked);
 			});
 
 	    	// Restore last code, if found.
 	    	var code = localStorage.getItem("lastCode");
+	    	var compilerOutput = localStorage.getItem("compilerOutput");
+				compilerOutputCheckbox.checked = compilerOutput === "true";
 	    	if (code) {
 	    		console.log("restoring code")
 	    		this.editor.setValue(code);
@@ -144,8 +152,11 @@
 				$.ajax({
           url: "/api/execute",
           method: "POST",
-					data: code,
-          contentType: "application/json",
+					data: JSON.stringify({
+						compilerOutput: document.getElementById("compiler-output").checked,
+						code,
+					}),
+					contentType: "application/json; charset=utf-8",
 				}).then(function(data) {
           console.log("Parsing json response ", data);
           data = JSON.parse(data);

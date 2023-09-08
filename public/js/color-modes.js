@@ -21,10 +21,10 @@
   
     const setTheme = theme => {
       if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.documentElement.setAttribute('data-bs-theme', 'dark')
-      } else {
-        document.documentElement.setAttribute('data-bs-theme', theme)
+        theme = 'dark'
       }
+      document.documentElement.setAttribute('data-bs-theme', theme)
+      document.dispatchEvent(new CustomEvent('bsThemeChanged', { detail: { theme }}));
     }
   
     setTheme(getPreferredTheme())
@@ -71,7 +71,6 @@
         .forEach(toggle => {
           toggle.addEventListener('click', () => {
             const theme = toggle.getAttribute('data-bs-theme-value')
-            document.dispatchEvent(new CustomEvent('bsThemeChanged', { detail: { theme }}));
             setStoredTheme(theme)
             setTheme(theme)
             showActiveTheme(theme, true)
