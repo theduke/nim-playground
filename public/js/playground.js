@@ -11,20 +11,30 @@
 			return document.querySelector('html').getAttribute('data-bs-theme') === 'dark';
 		},
 
+		setEditorDarkMode: function(dark = false) {
+			if (dark) {
+				this.editor.setTheme("ace/theme/chaos");
+			} else {
+				this.editor.setTheme("ace/theme/chrome");
+			}
+		},
+
 		init: function() {
 			var that = this;
 
 			console.log("Initializing Ace editor.");
 			var editor = ace.edit("editor");
-			if (this.isDarkModeEnabled()) {
-				editor.setTheme("ace/theme/chaos");
-			} else {
-				editor.session.setMode("ace/mode/python");
-			}
 	    	editor.getSession().setUseSoftTabs(true);
 	    	editor.getSession().setTabSize(2);
 
 	    	this.editor = editor;
+			this.setEditorDarkMode(this.isDarkModeEnabled());
+
+			// Listen for theme changes.
+			document.addEventListener('bsThemeChanged', (e) => {
+				console.log("Theme changed to " + e.detail.theme);
+				this.setEditorDarkMode(e.detail.theme === 'dark');
+			});
 
 	    	// Restore last code, if found.
 	    	var code = localStorage.getItem("lastCode");
