@@ -30,7 +30,7 @@ proc execute(body: string, appendCompilerOutput = true): string =
   else:
     (rawOutput, errCode) = osproc.execCmdEx(filePath)
     if appendCompilerOutput:
-      output = $rawOutput & "\n\n\n\n" & "#".repeat(60) & "\n###" & " Compiler output " & "#".repeat(40) & "\n" & "#".repeat(60) & "\n\n" & output
+      output = $rawOutput & "\n\n" & "#".repeat(60) & "\n###" & " Compiler output " & "#".repeat(40) & "\n" & "#".repeat(60) & "\n\n" & output
     else:
       output = $rawOutput
     executionTime = times.epochTime() - start - compileTime
