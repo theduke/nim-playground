@@ -29,47 +29,49 @@
 			</div>
 		</nav>
 
-		<div id="playground" class="container">
+		<div class="container-fluid">
 
-			<div class="row">
-				<div class="col-md-6 header-wrap">
-					<h3>Code</h3>
+
+			<div id="playground">
+
+				<div class="row">
+					<div class="col-md-6 header-wrap">
+						<h3>Code</h3>
+					</div>
+
+					<div class="col-md-6 header-wrap">
+						<h3>Result</h3>
+
+					</div>
 				</div>
 
-				<div class="col-md-6 header-wrap">
-					<h3>Result</h3>
+				<div class="row">
+					<div class="col-md-6">
+						<pre id="editor"></pre>
 
-				</div>
-			</div>
+						<div class="d-flex align-items-center my-3">
+							<button class="btn btn-primary btn-lg runner ">Execute</button>
+							<span class="px-3">CTRL-ENTER</span>
+							<div class="spinner-border show-on-loading" role="status">
+								<span class="visually-hidden">Loading...</span>
+							</div>
+						</div>
+					</div>
 
-			<div class="row">
-				<div class="col-md-6">
-					<pre id="editor"></pre>
-
-					<div class="d-flex align-items-center my-3">
-						<button class="btn btn-primary btn-lg runner">Execute</button>
-						<span class="px-3">CTRL-ENTER</span>
-						<div class="spinner-border show-on-loading" role="status">
-							<span class="visually-hidden">Loading...</span>
+					<div class="col-md-6">
+						<div class="panel" id="status-panel">
+							<pre class="card card-body" id="result"></pre>
+						</div>
+						<div class="row align-items-center">
+							<div class="col">
+								<p class="alert alert-info" id="status-alert">Waiting for input...</p>
+							</div>
 						</div>
 					</div>
 				</div>
-
-				<div class="col-md-6">
-					<div class="panel" id="status-panel">
-						<pre class="card card-body" id="result"></pre>
-					</div>
-					<div class="row align-items-center">
-						<div class="col">
-							<p class="alert alert-info" id="status-alert">Waiting for input...</p>
-						</div>
-					</div>
-				</div>
 			</div>
-		</div>
 
-		<div id="history">
-			<div class="container">
+			<div id="history">
 				<h2>History</h2>
 				<p>History of your executed code.</p>
 
@@ -84,8 +86,13 @@
 					</div>
 				</div>
 
-				<ul class="list-group" id="history-list">
-				</ul>
+				<div class="row">
+					<div class="col-12">
+						<ul class="list-group my-3" id="history-list">
+						</ul>
+					</div>
+				</div>
+
 			</div>
 		</div>
 	</main>
