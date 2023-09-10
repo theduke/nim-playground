@@ -7,13 +7,20 @@
 		processing: false,
 		editor: null,
 
+		isDarkModeEnabled: function() {
+			return document.querySelector('html').getAttribute('data-bs-theme') === 'dark';
+		},
+
 		init: function() {
 			var that = this;
 
 			console.log("Initializing Ace editor.");
 			var editor = ace.edit("editor");
-	    	editor.setTheme("ace/theme/chrome");
-	    	editor.session.setMode("ace/mode/python");
+			if (this.isDarkModeEnabled()) {
+				editor.setTheme("ace/theme/chaos");
+			} else {
+				editor.session.setMode("ace/mode/python");
+			}
 	    	editor.getSession().setUseSoftTabs(true);
 	    	editor.getSession().setTabSize(2);
 
@@ -24,6 +31,7 @@
 	    	if (code) {
 	    		console.log("restoring code")
 	    		this.editor.setValue(code);
+				this.editor.clearSelection();
 	    	}
 
 	    	$(".runner").click(function(evt) {
@@ -49,6 +57,7 @@
 	    		var item = JSON.parse(localStorage.getItem("pgHistory"))[index];
 	    		
 	    		that.editor.setValue(item.code);
+				that.editor.clearSelection();
 	    		$("#result").html(item.result);
 
 	    		that.showPlayground();
@@ -64,15 +73,15 @@
 		showPlayground: function() {
 			$("#history").css("display", "none");
 			$("#playground").css("display", "block");
-			$("#main-nav li").removeClass("active");
-			$("#show-pg").parent().addClass("active");
+			$("#main-nav .nav-link").removeClass("active");
+			$("#show-pg").addClass("active");
 		},
 
 		showHistory: function() {
 			$("#playground").css("display", "none");
 			$("#history").css("display", "block");
-			$("#main-nav li").removeClass("active");
-			$("#show-history").parent().addClass("active");
+			$("#main-nav .nav-link").removeClass("active");
+			$("#show-history").addClass("active");
 
 			var jsonHistory = localStorage.getItem("pgHistory");
 			var history = JSON.parse(jsonHistory);
@@ -116,7 +125,8 @@
 				// Save code to localstorage.
 				localStorage.setItem("lastCode", code);
 
-				$(".loader").css("display", "inline");
+				$(".show-on-loading").css("display", "inline-block");
+				$(".hide-on-loading").css("display", "none");
 				$(".runner").attr("disabled", "");
 				this.setStatus("Processing...", "warning");
         $("#result").html("");
@@ -159,12 +169,14 @@
 
 					$("#result").html(data.result);
 
-					$(".loader").css("display", "none");
+					$(".show-on-loading").css("display", "none");
+					$(".hide-on-loading").css("display", "inline-block");
 					$(".runner").removeAttr("disabled");
 
 				}, function(err) {
 					that.setStatus("An error occurred", "error");
-					$(".loader").css("display", "none");
+					$(".show-on-loading").css("display", "none");
+					$(".hide-on-loading").css("display", "inline-block");
 					$(".runner").removeAttr("disabled");
 				});
 			}

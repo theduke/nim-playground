@@ -1,6 +1,5 @@
-
-body {
-  margin-top: 60px;
+nav.navbar {
+	margin-bottom: 30px;
 }
 
 #history {
@@ -11,7 +10,7 @@ body {
   font-size: 1.2em;
 }
 
-.loader {
+.show-on-loading {
 	display: none;
 }
 

@@ -1,101 +1,97 @@
 <!DOCTYPE html>
-<html>
+<html data-bs-theme="dark">
 
 <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>NIM Playground</title>
-	<link rel="stylesheet" type="text/css" href="/js/bootstrap-3.3.5-dist/css/bootstrap.css" />
-	<link rel="stylesheet" type="text/css" href="/js/bootstrap-3.3.5-dist/css/bootstrap-theme.css" />
+	<link rel="stylesheet" type="text/css" href="/js/bootstrap-5.3.1-dist/css/bootstrap.css" />
 	<link rel="stylesheet" type="text/css" href="/css/playground.css" />
 </head>
 
 <body>
-	<nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#">NIM Playground</a>
-      </div>
-      <div id="main-nav" class="collapse navbar-collapse">
-        <ul class="nav navbar-nav">
-          <li class="active"><a id="show-pg" href="#">Playground</a></li>
-          <li><a href="#" id="show-history">History</a></li>
-        </ul>
-      </div><!--/.nav-collapse -->
-  </nav>
+	<main class="bg-body-tertiary">
 
-	<div class="" id="playground">
-		
-		<div class="row">
-			<div class="col-md-6 header-wrap">
-				<h3>Code</h3>
+		<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="#">NIM Playground</a>
+				<button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+					aria-expanded="false" aria-controls="navbar">
+					<span class="visually-hidden">Toggle navigation</span>
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div id="main-nav" class="collapse navbar-collapse">
+					<ul class="nav navbar-nav me-auto mb-2 mb-sm-0">
+						<li class="nav-item"><a id="show-pg" class="nav-link active" href="#">Playground</a></li>
+						<li class="nav-item"><a id="show-history" class="nav-link" href="#">History</a></li>
+					</ul>
+				</div><!--/.nav-collapse -->
 			</div>
+		</nav>
 
-			<div class="col-md-6 header-wrap">
-				<h3>Result</h3>
-				<div class="row">
-					<div class="col-sm-2" style="text-align: center;">
-						<h4>Status</h4>
-						<img src="/img/ajax-loader.gif" class="loader" />
-					</div>
-					<div class="col-sm-10">
-						<p class="alert alert-info" id="status-alert">Waiting for input...</p>
-
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="col-md-6">
-				<pre id="editor"></pre>
-				
-				<div class="panel-footer">
-					<button class="btn btn-primary btn-lg runner">Execute</button>
-
-					<span class="label label-default">CTRL-ENTER</span>
-					<img src="/img/ajax-loader.gif" class="loader" />
-				</div>
-			</div>
-
-			<div class="col-md-6">
-				<div class="panel" id="status-panel">
-					<pre class="well" id="result"></pre>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div id="history">
-		<div class="container">
-			<h2>History</h2>
-			
-			<p>History of your executed code.</p>
-
-			
+		<div id="playground" class="container">
 
 			<div class="row">
-				<div class="col-sm-8">
-					<p class="alert alert-warning">
-					History is stored in browsers localStorage.
-				</p>
+				<div class="col-md-6 header-wrap">
+					<h3>Code</h3>
 				</div>
-				<div class="col-sm-4">
-					<button class="btn btn-warning btn-lg" id="clear-history">Clear History</button>
+
+				<div class="col-md-6 header-wrap">
+					<h3>Result</h3>
+
 				</div>
 			</div>
 
-			<ul class="list-group" id="history-list">
-					
-			</ul>
+			<div class="row">
+				<div class="col-md-6">
+					<pre id="editor"></pre>
+
+					<div class="d-flex align-items-center my-3">
+						<button class="btn btn-primary btn-lg runner">Execute</button>
+						<span class="px-3">CTRL-ENTER</span>
+						<div class="spinner-border show-on-loading" role="status">
+							<span class="visually-hidden">Loading...</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="panel" id="status-panel">
+						<pre class="card card-body" id="result"></pre>
+					</div>
+					<div class="row align-items-center">
+						<div class="col">
+							<p class="alert alert-info" id="status-alert">Waiting for input...</p>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-	</div>
+
+		<div id="history">
+			<div class="container">
+				<h2>History</h2>
+				<p>History of your executed code.</p>
+
+				<div class="row">
+					<div class="col-sm-8">
+						<p class="alert alert-warning">
+							History is stored in browsers localStorage.
+						</p>
+					</div>
+					<div class="col-sm-4">
+						<button class="btn btn-warning btn-lg" id="clear-history">Clear History</button>
+					</div>
+				</div>
+
+				<ul class="list-group" id="history-list">
+				</ul>
+			</div>
+		</div>
+	</main>
 
 	<script type="text/javascript" src="/js/jquery-2.1.4.min.js"></script>
-	<script type="text/javascript" src="/js/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/js/bootstrap-5.3.1-dist/js/bootstrap.min.js"></script>
 	<script src="/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript" src="/js/playground.js"></script>
 </body>
