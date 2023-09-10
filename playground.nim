@@ -46,7 +46,7 @@ settings:
 
 routes:
   post "/api/execute":
-    headers = newStringTable(modeCaseSensitive)
+    let headers = newStringTable(modeCaseSensitive)
     headers["Content-Type"] = "application/json"
     resp(execute(request.body))
 
