@@ -6,7 +6,7 @@ type Result = object of RootObj
   compileTime: float
   executionTime: float
 
-proc execute(body: string): string =
+proc execute(body: string, appendCompilerOutput = true): string =
   var status = "success"
   var output = ""
   var compileTime, executionTime: float = 0
@@ -29,7 +29,10 @@ proc execute(body: string): string =
     echo("Compilation error for $1: $2" % [filePath, output])
   else:
     (rawOutput, errCode) = osproc.execCmdEx(filePath)
-    output = $rawOutput & "\n\n\n\n" & "#".repeat(60) & "\n###" & " Compiler output " & "#".repeat(40) & "\n" & "#".repeat(60) & "\n\n" & output
+    if appendCompilerOutput:
+      output = $rawOutput & "\n\n\n\n" & "#".repeat(60) & "\n###" & " Compiler output " & "#".repeat(40) & "\n" & "#".repeat(60) & "\n\n" & output
+    else:
+      output = $rawOutput
     executionTime = times.epochTime() - start - compileTime
     if errCode > 0:
       status = "executionError"
