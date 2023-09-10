@@ -26,6 +26,35 @@ playground
 
 * Enjoy.
 
+## Bug Notice
+
+As of September 2023, you may encounter the following error when launching the playground:
+
+```
+SIGSEGV: Illegal storage access. (Attempt to read from nil?)
+Segmentation fault
+```
+
+This issue originates from the [httpbeast](https://github.com/dom96/httpbeast) library, which is a dependency of  [jester](https://github.com/dom96/jester). For further information, refer to this [GitHub issue](https://github.com/dom96/jester/issues/321).
+
+
+
+### Quick Fix
+
+* Run the playground:
+
+```bash
+nimble run -d:useStdLib
+```
+
+* Compile the playground:
+
+```bash
+nimble build -d:useStdLib
+```
+
+The flag `-d:useStdLib` directs jester to use [std/asynchttpserver](https://nim-lang.org/docs/asynchttpserver.html) instead of [httpbeast](https://github.com/dom96/httpbeast).
+
 
 ## Security notice
 
