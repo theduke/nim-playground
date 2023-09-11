@@ -46,6 +46,8 @@ proc execute(body: string, appendCompilerOutput = true): string =
 
 settings:
   staticDir = joinPath(getAppDir(), "public")
+  port = 5000.Port
+  bindAddr = "127.0.0.1"
 
 routes:
   post "/api/execute":
