@@ -187,8 +187,11 @@
 					});
 					localStorage.setItem("pgHistory", JSON.stringify(history));
 
+					function htmlEncode(html){
+						return $("<div/>").text(html).html();
+					}
 
-					$("#result").html(data.result);
+					$("#result").html(htmlEncode(data.result));
 
 					$(".show-on-loading").css("display", "none");
 					$(".hide-on-loading").css("display", "inline-block");
