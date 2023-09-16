@@ -1,4 +1,4 @@
-import jester, asyncdispatch, htmlgen, strutils, strtabs, osproc, os, oids, times, marshal
+import jester, asyncdispatch, htmlgen, strutils, strtabs, osproc, os, oids, times, marshal, json
 
 type Result = object of RootObj
   status: string
@@ -6,7 +6,7 @@ type Result = object of RootObj
   compileTime: float
   executionTime: float
 
-proc execute(body: string): string =
+proc execute(body: string, appendCompilerOutput = true): string =
   var status = "success"
   var output = ""
   var compileTime, executionTime: float = 0
@@ -21,7 +21,7 @@ proc execute(body: string): string =
   system.writeFile(filePath & ".nim", body)
   
   echo("Compiling file $1" % [filePath])
-  var (rawOutput, errCode) = osproc.execCmdEx("nim c --threads:on " & filePath & ".nim")
+  var (rawOutput, errCode) = osproc.execCmdEx("nim c --threads:on --opt:none " & filePath & ".nim")
   compileTime = times.epochTime() - start
   output = $rawOutput
   if errCode > 0:
@@ -29,7 +29,10 @@ proc execute(body: string): string =
     echo("Compilation error for $1: $2" % [filePath, output])
   else:
     (rawOutput, errCode) = osproc.execCmdEx(filePath)
-    output = $rawOutput & "\n\n\n\n" & "#".repeat(60) & "\n###" & " Compiler output " & "#".repeat(40) & "\n" & "#".repeat(60) & "\n\n" & output
+    if appendCompilerOutput:
+      output = $rawOutput & "\n\n" & "#".repeat(60) & "\n###" & " Compiler output " & "#".repeat(40) & "\n" & "#".repeat(60) & "\n\n" & output
+    else:
+      output = $rawOutput
     executionTime = times.epochTime() - start - compileTime
     if errCode > 0:
       status = "executionError"
@@ -43,12 +46,18 @@ proc execute(body: string): string =
 
 settings:
   staticDir = joinPath(getAppDir(), "public")
+  port = 5000.Port
+  bindAddr = "127.0.0.1"
 
 routes:
   post "/api/execute":
-    headers = newStringTable(modeCaseSensitive)
+    let headers = newStringTable(modeCaseSensitive)
     headers["Content-Type"] = "application/json"
-    resp(execute(request.body))
+    let body = try: request.body.parseJson
+               except: newJNull()
+    let code = body["code"].getStr()
+    let compilerOutput = body["compilerOutput"].getBool()
+    resp(execute(code, appendCompilerOutput = compilerOutput))
 
 
 runForever()

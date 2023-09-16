@@ -1,22 +1,25 @@
+html {
+	overflow-y: scroll;
+}
 
-body {
-  margin-top: 60px;
+nav.navbar {
+	margin-bottom: 30px;
 }
 
 #history {
-  display: none;
-}
-
-#history .label {
-  font-size: 1.2em;
-}
-
-.loader {
 	display: none;
 }
 
-#playground	{
-  margin: 0 20px;
+#history .label {
+	font-size: 1.2em;
+}
+
+.show-on-loading {
+	display: none;
+}
+
+#playground {
+	margin: 0 20px;
 }
 
 #playground h3 {
@@ -31,14 +34,14 @@ body {
 	text-align: center;
 }
 
-#status-alert {
-}
+#status-alert {}
 
 #editor {
-	min-height: 600px;
+	min-height: calc(100vh - 250px);
 	font-size: 18px;
 }
 
 #result {
-	min-height: 600px;
+	min-height: calc(100vh - 250px);
+  white-space: pre-wrap;
 }

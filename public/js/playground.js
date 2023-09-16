@@ -7,23 +7,49 @@
 		processing: false,
 		editor: null,
 
+		isDarkModeEnabled: function() {
+			return document.querySelector('html').getAttribute('data-bs-theme') === 'dark';
+		},
+
+		setEditorDarkMode: function(dark = false) {
+			if (dark) {
+				this.editor.setTheme("ace/theme/tomorrow_night");
+			} else {
+				this.editor.setTheme("ace/theme/chrome");
+			}
+		},
+
 		init: function() {
 			var that = this;
 
 			console.log("Initializing Ace editor.");
 			var editor = ace.edit("editor");
-	    	editor.setTheme("ace/theme/chrome");
-	    	editor.session.setMode("ace/mode/python");
-	    	editor.getSession().setUseSoftTabs(true);
-	    	editor.getSession().setTabSize(2);
+			editor.getSession().setUseSoftTabs(true);
+			editor.getSession().setTabSize(2);
+			editor.setFontSize(14);
 
-	    	this.editor = editor;
+			this.editor = editor;
+			this.setEditorDarkMode(this.isDarkModeEnabled());
+
+			// Listen for theme changes.
+			document.addEventListener('bsThemeChanged', (e) => {
+				this.setEditorDarkMode(e.detail.theme === 'dark');
+			});
+
+			// Listen for and save checkbox changes.
+			var compilerOutputCheckbox = document.getElementById("compiler-output");
+			compilerOutputCheckbox.addEventListener("change", function() {
+				localStorage.setItem("compilerOutput", this.checked);
+			});
 
 	    	// Restore last code, if found.
 	    	var code = localStorage.getItem("lastCode");
+	    	var compilerOutput = localStorage.getItem("compilerOutput");
+				compilerOutputCheckbox.checked = compilerOutput === "true";
 	    	if (code) {
 	    		console.log("restoring code")
 	    		this.editor.setValue(code);
+				this.editor.clearSelection();
 	    	}
 
 	    	$(".runner").click(function(evt) {
@@ -49,6 +75,7 @@
 	    		var item = JSON.parse(localStorage.getItem("pgHistory"))[index];
 	    		
 	    		that.editor.setValue(item.code);
+				that.editor.clearSelection();
 	    		$("#result").html(item.result);
 
 	    		that.showPlayground();
@@ -64,15 +91,15 @@
 		showPlayground: function() {
 			$("#history").css("display", "none");
 			$("#playground").css("display", "block");
-			$("#main-nav li").removeClass("active");
-			$("#show-pg").parent().addClass("active");
+			$("#main-nav .nav-link").removeClass("active");
+			$("#show-pg").addClass("active");
 		},
 
 		showHistory: function() {
 			$("#playground").css("display", "none");
 			$("#history").css("display", "block");
-			$("#main-nav li").removeClass("active");
-			$("#show-history").parent().addClass("active");
+			$("#main-nav .nav-link").removeClass("active");
+			$("#show-history").addClass("active");
 
 			var jsonHistory = localStorage.getItem("pgHistory");
 			var history = JSON.parse(jsonHistory);
@@ -116,7 +143,8 @@
 				// Save code to localstorage.
 				localStorage.setItem("lastCode", code);
 
-				$(".loader").css("display", "inline");
+				$(".show-on-loading").css("display", "inline-block");
+				$(".hide-on-loading").css("display", "none");
 				$(".runner").attr("disabled", "");
 				this.setStatus("Processing...", "warning");
         $("#result").html("");
@@ -124,8 +152,11 @@
 				$.ajax({
           url: "/api/execute",
           method: "POST",
-					data: code,
-          contentType: "application/json",
+					data: JSON.stringify({
+						compilerOutput: document.getElementById("compiler-output").checked,
+						code,
+					}),
+					contentType: "application/json; charset=utf-8",
 				}).then(function(data) {
           console.log("Parsing json response ", data);
           data = JSON.parse(data);
@@ -156,15 +187,20 @@
 					});
 					localStorage.setItem("pgHistory", JSON.stringify(history));
 
+					function htmlEncode(html){
+						return $("<div/>").text(html).html();
+					}
 
-					$("#result").html(data.result);
+					$("#result").html(htmlEncode(data.result));
 
-					$(".loader").css("display", "none");
+					$(".show-on-loading").css("display", "none");
+					$(".hide-on-loading").css("display", "inline-block");
 					$(".runner").removeAttr("disabled");
 
 				}, function(err) {
 					that.setStatus("An error occurred", "error");
-					$(".loader").css("display", "none");
+					$(".show-on-loading").css("display", "none");
+					$(".hide-on-loading").css("display", "inline-block");
 					$(".runner").removeAttr("disabled");
 				});
 			}
